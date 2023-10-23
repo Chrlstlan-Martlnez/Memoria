@@ -1,0 +1,28 @@
+Registros de Duelos
+Registros con todos los duelos de memoria entre Steve y Alex
+
+
+Steve gana a Alex
+Consiguió 14.0 puntos.
+Con 6 cartas.
+En 12 turnos.
+
+Steve gana a Alex
+Consiguió 13.0 puntos.
+Con 5 cartas.
+En 18 turnos.
+
+Steve gana a Alex
+Consiguió 12.0 puntos.
+Con 5 cartas.
+En 9 turnos.
+
+Alex gana a Steve
+Consiguió 14.0 puntos.
+Con 7 cartas.
+En 12 turnos.
+
+Alex gana a Steve
+Consiguió 13.0 puntos.
+Con 7 cartas.
+En 11 turnos.

@@ -15,10 +15,19 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 public class Memoria {
+    static boolean audioHab = true;
+    static boolean musicaHab = true;
     
     static Ventana disenoVentanaJuego(Panel panelTablero, Panel panelIzquierda, Panel panelDerecha, Label turno, Label versus, Boton salir, Boton manual, Boton sonidos, Boton musica){
         Ventana ventanaPrincipal = new Ventana("Memoria", new Color(0x6E3700), new ImageIcon("imgsMc\\mesa.png"), new Dimension(1000,600), 20);
@@ -57,11 +66,11 @@ public class Memoria {
         panelMarcador.add(j1Puntos, BorderLayout.WEST);
         j1Puntos.setHorizontalTextPosition(Label.RIGHT);
         j1Puntos.setHorizontalAlignment(Label.LEFT);
-        j1Puntos.setFont(new Font("MS Gothic", Font.BOLD, 30));
+        j1Puntos.setFont(new Font("MS Gothic", Font.BOLD, 25));
         panelMarcador.add(j2Puntos, BorderLayout.EAST);
         j2Puntos.setHorizontalTextPosition(Label.LEFT);
         j2Puntos.setHorizontalAlignment(Label.RIGHT);
-        j2Puntos.setFont(new Font("MS Gothic", Font.BOLD, 30));
+        j2Puntos.setFont(new Font("MS Gothic", Font.BOLD, 25));
         panelMarcador.add(versus, BorderLayout.CENTER);
         versus.setHorizontalAlignment(Label.CENTER);
         versus.setFont(new Font("MS Gothic", Font.BOLD  , 30));
@@ -83,7 +92,7 @@ public class Memoria {
         return ventanaPrincipal;
     } 
     
-    static void funcionesBotones(Boton jugar, Boton manualInicio, Boton salirInicio, Boton manual, Boton jugarManual, Boton salir, Boton salirFinal, Ventana ventanaJuego, Ventana2 ventanaInicio, Ventana3 ventanaManual){
+    static void funcionesBotones(Boton jugar, Boton manualInicio, Boton salirInicio, Boton manual, Boton jugarManual, Boton salir, Boton salirFinal, Boton sonidos, Boton musica, Ventana ventanaJuego, Ventana2 ventanaInicio, Ventana3 ventanaManual){
         jugar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ventanaJuego.setVisible(true);
@@ -127,6 +136,26 @@ public class Memoria {
                 System.exit(0);
             }
         });
+        sonidos.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (audioHab){
+                   audioHab = false;
+                }
+                else{
+                    audioHab = true;
+                }
+            }
+        });
+        musica.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (musicaHab){
+                   musicaHab = false;
+                }
+                else{
+                    musicaHab = true;
+                }
+            }
+        });
     }
     
     static void definirPrimerJugador(Cola colaJugadores, Jugador jugador1, Jugador jugador2){
@@ -141,7 +170,6 @@ public class Memoria {
             colaJugadores.encolar(jugador2);
             colaJugadores.encolar(jugador1);
         }
-        
     }
 
     static void llenarTablerorConBotones(BotonCarta[] botonesTablero, ImageIcon espacioVacio, Panel panelTablero){
@@ -149,7 +177,6 @@ public class Memoria {
             botonesTablero[i] = new BotonCarta(espacioVacio, new Color(0x111111), new Dimension(80,80));
             panelTablero.add(botonesTablero[i]);
         }
-        
     }
 
     static void asignarLabelsParejasJugador(LabelCarta[] LabelsParejasJ1, LabelCarta[] LabelsParejasJ2, Panel parejasJ1, Panel parejasJ2){
@@ -174,7 +201,6 @@ public class Memoria {
         pilaCartas.agregarPar(new Carta(9, new ImageIcon("iconos\\espada.png"), 1));
         pilaCartas.agregarPar(new Carta(10, new ImageIcon("iconos\\hierro.png"), 1));
         pilaCartas.agregarPar(new Carta(11, new ImageIcon("iconos\\cama.png"), 1));
-        
     }
 
     static void asignarCartasTablero(Pila pilaC, BotonCarta[] arregloBotones){
@@ -191,8 +217,7 @@ public class Memoria {
                 
                 arregloBotones[pos].img = aux.getImagen();
                 arregloBotones[pos].setNumero(aux.getNumero());
-                arregloBotones[pos].setPuntos(aux.getPuntos());
-                
+                arregloBotones[pos].setPuntos(aux.getPuntos()); 
             }
         }
     }
@@ -210,16 +235,29 @@ public class Memoria {
         return listaVacia;
     }
     
-    static void deshabilitarCartasSiPuntua(BotonCarta[] arregloBotones, int primeraCarta) throws InterruptedException{
+    static void deshabilitarCartasSiPuntua(BotonCarta[] arregloBotones, int primeraCarta) throws InterruptedException, UnsupportedAudioFileException, IOException, LineUnavailableException{
+        File archivoAudio = new File("audio\\XP_Old.wav");
+        AudioInputStream inputAudio = AudioSystem.getAudioInputStream(archivoAudio);
+        Clip audio =AudioSystem.getClip();
+        audio.open(inputAudio);
+        
         for (int k = 0; k <= 23; k++) {
             if ((arregloBotones[k].numero != arregloBotones[primeraCarta].numero)) {
                 arregloBotones[k].setEnabled(false);
             }
         }
+        if (audioHab){
+            audio.start();
+        }
         Thread.sleep(1000);
     }
     
-    static void deshabilitarCartas(BotonCarta[] arregloBotones, int primeraCarta, int segundaCarta) throws InterruptedException{
+    static void deshabilitarCartas(BotonCarta[] arregloBotones, int primeraCarta, int segundaCarta) throws UnsupportedAudioFileException, LineUnavailableException, IOException, InterruptedException{
+        File archivoAudio = new File("audio\\Hurt_Old.wav");
+        AudioInputStream inputAudio = AudioSystem.getAudioInputStream(archivoAudio);
+        Clip audio =AudioSystem.getClip();
+        audio.open(inputAudio);
+        
         for (int k = 0; k <= 23; k++) {
             if (((arregloBotones[k].numero != arregloBotones[primeraCarta].numero) 
                     && (arregloBotones[k].numero != arregloBotones[segundaCarta].numero) 
@@ -228,16 +266,27 @@ public class Memoria {
                 arregloBotones[k].setEnabled(false);
             }
         }
+        if (audioHab){
+            audio.start();
+        }
         Thread.sleep(1000);
     }
     
-    static void deshabilitarCartasConWither(BotonCarta[] arregloBotones, int primeraCarta, int segundaCarta, int terceraCarta) throws InterruptedException{
+    static void deshabilitarCartasConWither(BotonCarta[] arregloBotones, int primeraCarta, int segundaCarta, int terceraCarta) throws InterruptedException, LineUnavailableException, UnsupportedAudioFileException, IOException {
+        File archivoAudio = new File("audio\\Hurt_Old.wav");
+        AudioInputStream inputAudio = AudioSystem.getAudioInputStream(archivoAudio);
+        Clip audio =AudioSystem.getClip();
+        audio.open(inputAudio);
+        
         for (int k = 0; k <= 23; k++) {
             if (((arregloBotones[k].numero != arregloBotones[primeraCarta].numero) 
                     && (arregloBotones[k].numero != arregloBotones[segundaCarta].numero) 
                         || (( k != primeraCarta) && ( k != segundaCarta) && ( k != terceraCarta)))) {
                 arregloBotones[k].setEnabled(false);
             }
+        }
+        if (audioHab){
+            audio.start();
         }
         Thread.sleep(1000);
     }
@@ -275,7 +324,6 @@ public class Memoria {
                 break;
             }
         }
-        
         arregloBotones[primeraCarta].setNumero(0);
         arregloBotones[segundaCarta].setNumero(0);
         arregloBotones[terceraCarta].setNumero(0);
@@ -287,27 +335,27 @@ public class Memoria {
         arregloBotones[terceraCarta].setClick(false);
     }
     
-    static void parejaEncontrada(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores, boolean manzanaOro) throws InterruptedException{
+    static void parejaEncontrada(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores, boolean manzanaOro) throws InterruptedException, IOException, LineUnavailableException, UnsupportedAudioFileException{
         deshabilitarCartasSiPuntua(botonesTablero, primerIterador);
         eliminarCartaDeTablero(colaJugadores.getPrimero(), botonesTablero, colaJugadores.getPrimero().getArreglo(), primerIterador, segundoIterador, manzanaOro);
         voltearCartas(botonesTablero, primerIterador, segundoIterador);
         colaJugadores.getPrimero().sumarPareja();
     }
     
-    static void parejaNoEncontrada(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores) throws InterruptedException{
+    static void parejaNoEncontrada(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores) throws InterruptedException, UnsupportedAudioFileException, LineUnavailableException, IOException{
         deshabilitarCartas(botonesTablero, primerIterador, segundoIterador);
         voltearCartas(botonesTablero, primerIterador, segundoIterador);
         colaJugadores.getPrimero().sumarTurno();
         colaJugadores.encolar(colaJugadores.desencolar());
     }
     
-    static void tercerWitherEncontrado(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, int tercerIterador, Cola colaJugadores) throws InterruptedException{
+    static void tercerWitherEncontrado(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, int tercerIterador, Cola colaJugadores) throws InterruptedException, UnsupportedAudioFileException, IOException, LineUnavailableException{
         deshabilitarCartasSiPuntua(botonesTablero, primerIterador);
         terceraCabezaWither(botonesTablero, colaJugadores.getPrimero().getArreglo(), primerIterador, segundoIterador, tercerIterador, colaJugadores);
         colaJugadores.getPrimero().sumarPareja();
     }
     
-    static void tercerWitherNoEncontrado(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, int tercerIterador, Cola colaJugadores) throws InterruptedException{
+    static void tercerWitherNoEncontrado(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, int tercerIterador, Cola colaJugadores) throws LineUnavailableException, IOException, UnsupportedAudioFileException, InterruptedException {
         deshabilitarCartasConWither(botonesTablero, primerIterador, segundoIterador, tercerIterador);
         voltearCartas(botonesTablero, primerIterador, segundoIterador);
         botonesTablero[tercerIterador].setClick(false);
@@ -315,7 +363,7 @@ public class Memoria {
         colaJugadores.encolar(colaJugadores.desencolar());
     }
     
-    static void buscarUltimoWither(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, int tercerIterador, Cola colaJugadores) throws InterruptedException{
+    static void buscarUltimoWither(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, int tercerIterador, Cola colaJugadores) throws InterruptedException, UnsupportedAudioFileException, IOException, LineUnavailableException{
         if (((botonesTablero[tercerIterador].numero == 1) && (botonesTablero[tercerIterador].click)) && (tercerIterador!=primerIterador)) {
             tercerWitherEncontrado(botonesTablero, primerIterador, segundoIterador, tercerIterador, colaJugadores);
             colaJugadores.getPrimero().setCartasPorVoltear(0);
@@ -326,7 +374,7 @@ public class Memoria {
         }
     }
     
-    static void segundoWitherEncontrado(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores) throws InterruptedException{
+    static void segundoWitherEncontrado(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores) throws InterruptedException, UnsupportedAudioFileException, IOException, LineUnavailableException{
         while (colaJugadores.getPrimero().getCartasPorVoltear() != 0) {
             for (int k = segundoIterador+1; k <= 23; k++) {
                 buscarUltimoWither(botonesTablero, primerIterador, segundoIterador, k, colaJugadores);
@@ -348,20 +396,23 @@ public class Memoria {
         }
     }
     
-    static void carnePodrida(LabelCarta[] parejasJugador, BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores) throws InterruptedException{
+    static void carnePodrida(LabelCarta[] parejasJugador, BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores) throws InterruptedException, UnsupportedAudioFileException, IOException, LineUnavailableException{
+        boolean manzana = false;
         for (int i = 0; i < 11; i++) {
             if (parejasJugador[i].getNumero() == 5){
-                parejaEncontrada(botonesTablero, primerIterador, segundoIterador, colaJugadores, true);
-                break;
-            }
-            else{
-                parejaEncontrada(botonesTablero, primerIterador, segundoIterador, colaJugadores, false);
+                manzana = true;
                 break;
             }
         }
+        if (manzana) {
+            parejaEncontrada(botonesTablero, primerIterador, segundoIterador, colaJugadores, true);
+        }
+        else{
+            parejaEncontrada(botonesTablero, primerIterador, segundoIterador, colaJugadores, false);
+        }
     }
     
-    static void buscarSegundaCarta(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores) throws InterruptedException, IOException, IOException, IOException{
+    static void buscarSegundaCarta(BotonCarta[] botonesTablero, int primerIterador, int segundoIterador, Cola colaJugadores) throws InterruptedException, IOException, IOException, IOException, UnsupportedAudioFileException, LineUnavailableException{
         if ((botonesTablero[primerIterador].numero == botonesTablero[segundoIterador].numero) && (botonesTablero[segundoIterador].click)){
             switch(botonesTablero[primerIterador].numero){
                 case 1:{
@@ -430,88 +481,101 @@ public class Memoria {
         }
     }
     
-    public static void main(String[] args) throws InterruptedException, IOException {
+    public static void main(String[] args) throws InterruptedException, IOException, UnsupportedAudioFileException, LineUnavailableException {
+        File archivoAudio = new File("audio\\C418_Minecraft.wav");
+        AudioInputStream inputAudio = AudioSystem.getAudioInputStream(archivoAudio);
+        Clip audioMusica =AudioSystem.getClip();
+        audioMusica.open(inputAudio);
         
-            boolean tableroVacio;
-            Pila pilaCartas = new Pila();
-            Cola colaJugadores = new Cola();
-            ImageIcon espacioVacio = new ImageIcon("iconos\\cartaVacia.png");
+        boolean tableroVacio;
+        Pila pilaCartas = new Pila();
+        Cola colaJugadores = new Cola();
+        ImageIcon espacioVacio = new ImageIcon("iconos\\cartaVacia.png");
 
-            Panel panelTablero = new Panel(new Dimension(510,330), new Color(0x111111), false, new GridLayout(4,6));
-            Panel panelJ1Cartas = new Panel(new Dimension(100,100), new Color(139,139,139), true, BorderFactory.createLineBorder(new Color(0x3D1F00), 10, false), new FlowLayout(5));
-            Panel panelJ2Cartas = new Panel(new Dimension(100,100), new Color(139,139,139), true, BorderFactory.createLineBorder(new Color(0x3D1F00), 10, false), new FlowLayout(5));
+        Panel panelTablero = new Panel(new Dimension(510,330), new Color(0x111111), false, new GridLayout(4,6));
+        Panel panelJ1Cartas = new Panel(new Dimension(100,100), new Color(139,139,139), true, BorderFactory.createLineBorder(new Color(0x3D1F00), 10, false), new FlowLayout(5));
+        Panel panelJ2Cartas = new Panel(new Dimension(100,100), new Color(139,139,139), true, BorderFactory.createLineBorder(new Color(0x3D1F00), 10, false), new FlowLayout(5));
 
-            Label turno = new Label(" ", new Color(0xA86E34), new Color(0xffffff), new Dimension(50,50));
-            Label versus = new Label(" ", new Color(0xA86E34), new Color(0xffffff), new Dimension(50,50));
+        Label turno = new Label(" ", new Color(0xA86E34), new Color(0xffffff), new Dimension(50,50));
+        Label versus = new Label(" ", new Color(0xA86E34), new Color(0xffffff), new Dimension(50,50));
 
-            Boton salir = new Boton("salir", new ImageIcon("imgsMc\\quit.jpg"));
-            Boton manual = new Boton("manual", new ImageIcon("imgsMc\\manual.png"));
-            Boton sonidos = new Boton("sonidos", new ImageIcon("imgsMc\\sonidos.png"), new Dimension(62,62));
-            Boton musica = new Boton("musica", new ImageIcon("imgsMc\\musica.png"), new Dimension(62,62));
+        Boton salir = new Boton("salir", new ImageIcon("imgsMc\\quit.jpg"));
+        Boton manual = new Boton("manual", new ImageIcon("imgsMc\\manual.png"));
+        Boton sonidos = new Boton("sonidos", new ImageIcon("imgsMc\\sonidos.png"), new Dimension(62,62));
+        Boton musica = new Boton("musica", new ImageIcon("imgsMc\\musica.png"), new Dimension(62,62));
 
-            Boton jugar = new Boton("jugar", new ImageIcon("imgsMc\\botonJugar.png"));
-            Boton salirInicio = new Boton("salir", new ImageIcon("imgsMc\\quit2.png"));
-            Boton manualInicio = new Boton("manual", new ImageIcon("imgsMc\\manual2.png"));
+        Boton jugar = new Boton("jugar", new ImageIcon("imgsMc\\botonJugar.png"));
+        Boton salirInicio = new Boton("salir", new ImageIcon("imgsMc\\quit2.png"));
+        Boton manualInicio = new Boton("manual", new ImageIcon("imgsMc\\manual2.png"));
 
-            Boton jugarManual = new Boton("jugarManual", new ImageIcon("imgsMc\\botonJugarManual.png"));
+        Boton jugarManual = new Boton("jugarManual", new ImageIcon("imgsMc\\botonJugarManual.png"));
             
-            Boton salirFinal = new Boton("salirFinal", new ImageIcon("imgsMc\\quit.jpg"));
+        Boton salirFinal = new Boton("salirFinal", new ImageIcon("imgsMc\\quit.jpg"));
 
-            BotonCarta botonesTablero[] = new BotonCarta[24];
-            LabelCarta LabelsParejasJ1[] = new LabelCarta[11];
-            LabelCarta LabelsParejasJ2[] = new LabelCarta[11];
+        BotonCarta botonesTablero[] = new BotonCarta[24];
+        LabelCarta LabelsParejasJ1[] = new LabelCarta[11];
+        LabelCarta LabelsParejasJ2[] = new LabelCarta[11];
 
-            Jugador jugador1 = new Jugador("Steve", new Color(0,0,255), 0, LabelsParejasJ1);
-            Jugador jugador2 = new Jugador("Alex", new Color(255,0,0), 0, LabelsParejasJ2);
+        Jugador jugador1 = new Jugador("Steve", new Color(0,0,255), 0, LabelsParejasJ1);
+        Jugador jugador2 = new Jugador("Alex", new Color(255,0,0), 0, LabelsParejasJ2);
 
-            definirPrimerJugador(colaJugadores, jugador1, jugador2);
-            llenarTablerorConBotones(botonesTablero, espacioVacio, panelTablero);
-            asignarLabelsParejasJugador(LabelsParejasJ1, LabelsParejasJ2, panelJ1Cartas, panelJ2Cartas);
+        definirPrimerJugador(colaJugadores, jugador1, jugador2);
+        llenarTablerorConBotones(botonesTablero, espacioVacio, panelTablero);
+        asignarLabelsParejasJugador(LabelsParejasJ1, LabelsParejasJ2, panelJ1Cartas, panelJ2Cartas);
 
-            llenarPilaCartas(pilaCartas);
-            asignarCartasTablero(pilaCartas, botonesTablero);
-            Ventana ventanaJuego = disenoVentanaJuego(panelTablero, panelJ1Cartas, panelJ2Cartas, turno, versus, salir, manual, sonidos, musica);
-            Ventana2 ventanaInicio = new Ventana2(jugar, salirInicio, manualInicio);
-            Ventana3 ventanaManual = new Ventana3(jugarManual);
-
-            ventanaInicio.setVisible(true);
-            funcionesBotones(jugar, manualInicio, salirInicio, manual, jugarManual, salir, salirFinal, ventanaJuego, ventanaInicio, ventanaManual);
+        llenarPilaCartas(pilaCartas);
+        asignarCartasTablero(pilaCartas, botonesTablero);
+        Ventana ventanaJuego = disenoVentanaJuego(panelTablero, panelJ1Cartas, panelJ2Cartas, turno, versus, salir, manual, sonidos, musica);
+        Ventana2 ventanaInicio = new Ventana2(jugar, salirInicio, manualInicio);
+        Ventana3 ventanaManual = new Ventana3(jugarManual);
+        
+        audioMusica.start();
+        ventanaInicio.setVisible(true);
+        funcionesBotones(jugar, manualInicio, salirInicio, manual, jugarManual, salir, salirFinal, sonidos, musica, ventanaJuego, ventanaInicio, ventanaManual);
             
-            do {
-                turno.setText("Turno de " + colaJugadores.getPrimero().getNombre());
-                versus.setText(String.valueOf((int)jugador1.getPuntos()) + " vs " + String.valueOf((int)jugador2.getPuntos()));
-                tableroVacio = true;
-                tableroVacio = arregloCartasVacio(botonesTablero, tableroVacio);
+        do {
+            if (musicaHab){
+                if (!audioMusica.isRunning()){
+                    audioMusica.start();
+                }
+            }
+            else {
+                audioMusica.stop();
+            }
+            
+            turno.setText("Turno de " + colaJugadores.getPrimero().getNombre());
+            versus.setText(String.valueOf((int)jugador1.getPuntos()) + " vs " + String.valueOf((int)jugador2.getPuntos()));
+            tableroVacio = true;
+            tableroVacio = arregloCartasVacio(botonesTablero, tableroVacio);
 
-                for (int i = 0; i < 23; i++) {
-                    if (botonesTablero[i].click){
-                        for (int j = i+1; j <= 23; j++) {
-                            buscarSegundaCarta(botonesTablero, i, j, colaJugadores);
-                        }
-                        for (int j = i-1; j >= 0; j--) {
-                            buscarSegundaCarta(botonesTablero, i, j, colaJugadores);
-                        }
+            for (int i = 0; i < 23; i++) {
+                if (botonesTablero[i].click){
+                    for (int j = i+1; j <= 23; j++) {
+                        buscarSegundaCarta(botonesTablero, i, j, colaJugadores);
+                    }
+                    for (int j = i-1; j >= 0; j--) {
+                        buscarSegundaCarta(botonesTablero, i, j, colaJugadores);
                     }
                 }
-            } while ((!tableroVacio) && ((colaJugadores.getPrimero().getPuntos() < 12.5) && (colaJugadores.getUltimo().getPuntos() < 12.5)));
-            for (int i = 0; i < 24; i++) {
-                botonesTablero[i].setEnabled(false);
             }
-            if (colaJugadores.getPrimero().getPuntos() < 11) {
-                colaJugadores.encolar(colaJugadores.desencolar());
-            }
-            registroDeVictorias(colaJugadores);
-            String texto = "Ganador: "+colaJugadores.getPrimero().getNombre();
-            String texto1 = "Turnos: "+String.valueOf(colaJugadores.getPrimero().getTurnos());
-            String texto2 = "Puntos: "+String.valueOf((int)colaJugadores.getPrimero().getPuntos());
+        } while ((!tableroVacio) && ((colaJugadores.getPrimero().getPuntos() < 12.5) && (colaJugadores.getUltimo().getPuntos() < 12.5)));
+        for (int i = 0; i < 24; i++) {
+            botonesTablero[i].setEnabled(false);
+        }
+        if (colaJugadores.getPrimero().getPuntos() < 11) {
+            colaJugadores.encolar(colaJugadores.desencolar());
+        }
+        registroDeVictorias(colaJugadores);
+        String texto = "Ganador: "+colaJugadores.getPrimero().getNombre();
+        String texto1 = "Turnos: "+String.valueOf(colaJugadores.getPrimero().getTurnos());
+        String texto2 = "Puntos: "+String.valueOf((int)colaJugadores.getPrimero().getPuntos());
             
             
-            Ventana4 ventanaFinal = new Ventana4(salirFinal,texto, texto1, texto2);
+        Ventana4 ventanaFinal = new Ventana4(salirFinal,texto, texto1, texto2);
             
-            ventanaFinal.setVisible(true);
-            ventanaJuego.setVisible(false);
-            ventanaInicio.setVisible(false);
-            ventanaManual.setVisible(false);
-           
+        ventanaFinal.setVisible(true);
+        ventanaJuego.setVisible(false);
+        ventanaInicio.setVisible(false);
+        ventanaManual.setVisible(false);   
     }
 }

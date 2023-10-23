@@ -19,9 +19,9 @@ public class Ventana4 extends JFrame{
         this.setLayout(new BorderLayout(20,20));
         
         Panel panelCentro = new Panel(new ImageIcon("imgsMc\\final.png"), new Dimension(1000,600), new Color(0x6E3700), null);
-        Label ganador = new Label(texto, new Color(0xA86E34), new Color(0X000000), new Dimension(150,50));
-        Label ganador1 = new Label(texto1, new Color(0xA86E34), new Color(0X000000), new Dimension(150,50));
-        Label ganador2 = new Label(texto2, new Color(0xA86E34), new Color(0X000000), new Dimension(150,50));
+        Label ganador = new Label(texto, new Color(131,108,63), new Color(0X000000), new Dimension(150,50));
+        Label ganador1 = new Label(texto1, new Color(131,108,63), new Color(0X000000), new Dimension(150,50));
+        Label ganador2 = new Label(texto2, new Color(131,108,63), new Color(0X000000), new Dimension(150,50));
         ganador.setFont(new Font("MS Gothic", Font.BOLD, 30));
         ganador.setBounds(350, 235, 300, 50);
         ganador1.setFont(new Font("MS Gothic", Font.BOLD, 30));

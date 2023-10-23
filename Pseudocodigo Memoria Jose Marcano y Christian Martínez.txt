@@ -1,0 +1,483 @@
+PSEUDOCODIGO
+Clase Carta
+	numero : Entero;
+	puntos: Doble;
+	imagen: Imagen;
+	siguiente : Carta;
+
+	Constructor Carta (numeroCarta, imagenCarta, puntosCarta)
+		numero = numeroCarta;
+		imagen = imagenCarta;
+		siguiente = Nulo;
+		puntos = puntosCarta;
+	Fin Constructor
+	Método setNumero(numeroCarta)
+		numero = numeroCarta;
+	Fin Metodo
+	Método setImagen (nuevaImg)
+		imagen = nuevaImg;
+	Fin Metodo
+	Método setSiguiente (nuevoSiguiente)
+		siguiente = nuevoSiguiente;
+	Fin Metodo
+	Método setCarta (nueva)
+		Llamar a setNumero (nueva.getNumero());
+		Llamar a setImagen (nueva.getImagen());
+	Fin Metodo
+	Método setSiguienteCarta(nueva)
+		siguiente = nueva;
+	Fin Metodo
+	Método getNumero() = Entero
+		Devolver numero;
+	Fin Metodo
+	Método getPuntos() = Doble
+		Devolver puntos;
+	Fin Metodo
+	Método getSiguienteNumero() = Entero
+		Devolver siguiente.getNumero();
+	Fin Metodo
+	Método getImagen() = ImageIcon
+		Devolver imagen;
+	Fin Metodo
+	Método getSiguienteImagen() = ImageIcon
+		Devolver siguiente.getImagen();
+	Fin Metodo
+	Método getCarta() = Carta
+		Devolver esto;
+	Fin Metodo
+	Método getSiguienteCarta() = Carta
+		Devolver siguiente;
+	Fin Metodo
+Fin Clase Carta
+ 
+Clase Jugador
+	nombre = CadenaTexto;
+	color = Color;
+	cartasParaVoltear = Entero;
+	turnos = Entero;
+	puntos = Doble;
+    	parejas : Entero;
+	arregloCartas: LabelCarta[];
+	siguiente : Jugador;
+
+	Constructor Jugador (nombreJug, colorJug, turnosJug, arregloCartasJug)
+		nombre = nombreJug;
+		color = colorJug;
+		cartasParaVoltear = 2;
+		turnos = turnosJug;
+		puntos = 0;
+		parejas = 0;
+		arregloCartas = arregloCartasJug;
+		siguiente = Nulo;
+	Fin Constructor
+	Método getNombre() = Cadena
+		Devolver nombre;
+	Fin Metodo
+	Método getColor() = Color
+		Devolver color;
+	Fin Metodo
+	Método getTurnos() = Entero
+		Devolver turnos;
+	Fin Metodo
+	Método getArreglo() = Arreglo de LabelCarta
+		Devolver arregloCartas;
+	Fin Metodo
+	Método setSiguiente (jugador)
+		siguiente = jugador;
+	Fin Metodo
+	Método setCartasPorVoltear (cartasVolteables)
+		cartasParaVoltear = cartasVolteables;
+	Fin Metodo
+	Método getCartasPorVoltear() = Entero
+		Devolver cartasParaVoltear;
+	Fin Metodo
+	Método getSiguiente() = Jugador
+		Devolver siguiente;
+	Fin Metodo
+	Método sumarPareja()
+		parejas = parejas + 1;
+	Fin Metodo
+	Método sumarPuntosPareja (puntosGanados)
+		puntos = puntos + (puntosGanados * 2);
+	Fin Metodo
+	Método sumarPuntosTrio (puntosGanados)
+		puntos = puntos + (puntosGanados * 3);
+	Fin Metodo
+	Método sumarTurno()
+		turnos = turnos + 1;
+	Fin Metodo
+	Método getParejas() = Entero
+		Devolver parejas;
+	Fin Metodo
+	Método getPuntos() = Doble
+		Devolver puntos;
+	Fin Metodo
+Fin Clase Jugador
+ 
+Clase Pila
+	tope: Carta;
+	cantidadCartas: Entero;
+	cartaAux: Carta;
+	pilaAux: Pila;
+
+	Constructor Pila()
+		tope = nulo;
+		cantidadCartas = 0;
+	Fin Constructor
+	Método esVacia(): Booleano
+		Si tope = nulo
+			Devolver true;
+		Sino
+			Devolver false;
+		Fin Si
+	Fin Metodo
+	Método agregar (nuevaCarta: Carta)
+		Si (esVacia() es verdadero)
+			Establecer 'tope' como 'nuevaCarta';
+        		Sino
+            			nuevaCarta.siguiente = tope;
+            			tope = nuevaCarta;
+        			cantidadCartas++;
+		Fin Si
+	Fin Metodo
+	Método agregarPar (nuevaCarta: Carta)
+        		cartaAux = nuevaCarta;
+        		agregar(nuevaCarta);
+        		agregar(cartaAux);
+	Fin Metodo
+    	Método sacarPrimera(): Carta
+        		tope= cartaAux;
+        		Si (esVacia() == false)
+            			tope = tope.siguiente;
+        			cantidadCartas--;
+        			Devolver cartaAux;
+	Fin Metodo
+    	Método getCantidad(): Entero
+        		Devolver cantidadCartas;
+	Fin Metodo
+    	Método mostrar()
+        		pilaAux = pilaactual;
+        		Si (esVacia() == true)
+            			Imprimir "La pila está vacía";
+        		Sino
+            			Mientras 'pilaAux' no esté vacía
+                				Imprimir el número de la carta en 'pilaAux';
+                				Sacar la primera carta de 'pilaAux' y avanzar al siguiente;
+		Fin si
+            		Imprimir "null";
+	Fin Metodo
+Fin de Clase Pila
+ 
+Clase Cola
+    	Jugador primero;
+    	Jugador ultimo;
+    	
+	Constructor Cola()
+        		primero = último = Nulo;
+	Fin Constructor
+    	Método esVacia() = Booleano
+        		Devolver (primero == Nulo);
+	Fin Metodo
+	Método encolar(jugador)
+        		Si (ultimo == Nulo) Entonces
+            			primero = ultimo = jugador;
+        		Sino
+            			último.setSiguiente (jugador);
+            			último = jugador;
+        		Fin Si
+	Fin Metodo
+    	Método desencolar() = Jugador
+        		Jugador aux = primero;
+        		primero = primero.getSiguiente();
+        		Si (primero == Nulo) Entonces
+            			ultimo = Nulo;
+        		Fin Si
+        		primero.setCartasPorVoltear(2);
+        		Devolver aux;
+	Fin Metodo
+    	Método getPrimero() = Jugador
+        		Devolver primero;
+	Fin Metodo
+    	Método getUltimo() = Jugador
+        		Devolver ultimo;
+	Fin Metodo
+Fin Clase Cola
+
+ 
+Clase Boton hereda de JButton
+    	nombreBoton :Cadena de Texto;
+        	img : Imagen;
+        	click : Booleano;
+    	
+	Constructor Boton (cadena nombre, ImageIcon imagen)
+        		nombreBoton = nombre;
+        		Llamar a setIcon(imagen);
+        		img = imagen;
+        		click = Falso;
+        		Llamar a setBorder (Color negro, 1);
+        		Llamar a setBackground(Color negro);
+	Fin Constructor
+    	Constructor Boton (nombre, imagen, tamano)
+        		nombreBoton = nombre;
+        		Llamar a setIcon (imagen);
+        		img = imagen;
+        		click = Falso;
+        		Llamar a setBorder (Color negro, 1);
+        		Llamar a setBackground (Color negro);
+        		Llamar a setPreferredSize (tamano);
+	Fin Constructor
+    	Método getNombre() = Cadena
+        		Devolver nombreBoton;
+    	Fin Metodo
+	Método getImg() = ImageIcon
+        		Devolver img;
+    	Fin Metodo
+	Método setClick (valor)
+        		click = valor;
+    	Fin Metodo
+	Método getClick() = Booleano
+        		Devolver click;
+	Fin Metodo
+Fin Clase Boton
+ 
+Clase BotonCarta hereda de JButton, implementa ActionListener
+   	numero  : Entero;
+    	puntos : Doble;
+    	click : Booleano;
+    	imgFondo : Imagen;
+    	img : Imagen;
+    	clicks  : Entero;
+    	
+	Constructor BotonCarta (imagen, fondo, tamano)
+        		Llamar a setLayout (new BorderLayout());
+        		Llamar a setBackground (fondo);
+        		Llamar a setIcon (imagen);
+        		Llamar a setOpaque (Verdadero);
+        		Llamar a setPreferredSize (tamano);
+ 		Llamar a addActionListener (este ActionListener);
+        		imgFondo = imagen;
+        		numero = 0;
+        		click = Falso;
+	Fin Constructor
+    	Método setNumero (nuevoNumero)
+        		numero = nuevoNumero;
+    	Fin Metodo
+	Método setPuntos (puntosCarta)
+        		puntos = puntosCarta;
+    	Fin Metodo
+	Método setClick (estadoClick)
+        		click = estadoClick;
+        		Si (click) Entonces
+            			Llamar a setIcon (img);
+        		Sino
+            			Llamar a setIcon (imgFondo);
+        		Fin Si
+    	Fin Metodo
+	Método actionPerformed(e)
+        		Si (e.getSource() == this) Entonces
+            			Llamar a setClick (Verdadero);
+        		Fin Si
+	Fin Metodo
+Fin Clase BotonCarta
+ 
+Clase Label hereda de JLabel
+   	Constructor Label (texto, fondo, fuente, tamano)
+        		Llamar a setLayout (new BorderLayout());
+        		Llamar a setText (texto);
+        		Llamar a setBackground (fondo);
+        		Llamar a setForeground (fuente);
+        		Llamar a setOpaque (Verdadero);
+        		Llamar a setPreferredSize (tamano);
+	Fin Constructor
+    	Constructor Label (texto, fondo, fuente, tamano, borde)
+        		Llamar a setLayout (new BorderLayout());
+        		Llamar a setText (texto);
+        		Llamar a setBackground (fondo);
+        		Llamar a setForeground (fuente);
+        		Llamar a setOpaque (Verdadero);
+        		Llamar a setPreferredSize (tamano);
+        		Llamar a setBorder (borde);
+	Fin Constructor
+    	Constructor Label (imagen, fondo, tamano)
+        		Llamar a setLayout (new BorderLayout());
+        		Llamar a setBackground (fondo);
+        		Llamar a setIcon (imagen);
+        		Llamar a setOpaque (Verdadero);
+        		Llamar a setPreferredSize (tamano);
+	Fin Constructor
+    	Constructor Label (texto, fondo, fuente, tamano, imagen)
+        		Llamar a setLayout (new BorderLayout());
+        		Llamar a setText (texto);
+        		Llamar a setBackground (fondo);
+        		Llamar a setForeground (fuente);
+        		Llamar a setIcon (imagen);
+        		Llamar a setOpaque (Verdadero);
+        		Llamar a setPreferredSize (tamano);
+	Fin Constructor
+Fin Clase Label
+ 
+Clase LabelCarta hereda de JLabel
+    	Entero numero;
+    	
+	Constructor LabelCarta(fondo, tamano);
+        		Llamar a setLayout (new FlowLayout());
+        		Llamar a setBackground (fondo);
+        		Llamar a setOpaque (Verdadero);
+        		Llamar a setPreferredSize (tamano);
+        		numero = 0;
+	Fin Constructor
+    	Método setNumero (nuevoNumero
+        		numero = nuevoNumero;
+	Fin Metodo
+    	Método getNumero() = Entero
+        		Devolver numero;
+	Fin Metodo
+Fin Clase LabelCarta
+ 
+Clase Panel Extiende JPanel
+	img: ImageIcon;
+    	
+	Constructor Panel (tamano: Dimension, fondo: Color)
+        		Configurar el diseño del panel como BorderLayout con espacios de 20;
+        		Establecer la dimensión del panel como 'tamano';
+        		Establecer el fondo del panel como 'fondo';
+    	Fin Constructor
+	Constructor Panel (tamano: Dimension, fondo: Color, tipoLayout: LayoutManager)
+        		Configurar el diseño del panel como 'tipoLayout';
+        		Establecer la dimensión del panel como 'tamano';
+        		Establecer el fondo del panel como 'fondo';
+        		Si tipoLayout = BorderLayout
+            			Crear un nuevo Panel llamado 'centro' con una dimensión de 10x10 y fondo = fondo;
+            			Agregar 'centro' al panel en la posición CENTER;
+		Fin SI
+	Fin Constructor
+    	Constructor Panel (img: ImageIcon, tamano: Dimension, fondo: Color, tipoLayout: LayoutManager)
+        		Establecer 'img' como la imagen proporcionada;
+        		Configurar el diseño del panel como 'tipoLayout';
+        		Establecer la dimensión del panel como 'tamano';
+		Establecer el fondo del panel como 'fondo';
+        		Si tipoLayout = BorderLayout
+            			Crear un nuevo Panel llamado 'centro' con una dimensión de 10x10 y fondo = fondo;
+            			Agregar 'centro' al panel en la posición CENTER;
+		Fin SI
+	Fin Constructor
+   	Constructor Panel (tamano: Dimension, fondo: Color, transparente: Booleano, borde: Border, tipoLayout: LayoutManager)
+        		Configurar el diseño del panel como 'tipoLayout';
+        		Establecer la dimensión del panel como 'tamano';
+        		Establecer el fondo del panel como 'fondo';
+        		Establecer el borde del panel como 'borde';
+        		Establecer la opacidad del panel como 'transparente';
+        		Si 'tipoLayout' es igual a BorderLayout
+            			Crear un nuevo Panel llamado 'centro' con una dimensión de 10x10 y fondo igual a 'fondo';
+            			Agregar 'centro' al panel en la posición CENTER;
+		Fin Si
+	Fin Constructor
+    	Constructor Panel (tamano: Dimension, fondo: Color, transparente: Booleano, tipoLayout: LayoutManager)
+        		Configurar el diseño del panel como 'tipoLayout';
+        		Establecer la dimensión del panel como 'tamano';
+        		Establecer el fondo del panel como 'fondo';
+        		Establecer la opacidad del panel como 'transparente';
+        		Si tipoLayout = BorderLayout
+            			Crear un nuevo Panel llamado 'centro' con una dimensión de 10x10 y fondo = fondo;
+            			Agregar 'centro' al panel en la posición CENTER;
+		Fin Si
+	Fin Constructor
+    	Llamar al método paintComponent de la clase padre;
+        		Si img =! Nulo
+            		Dibujar la imagen 'img' en el panel, escalándola para ajustar el ancho y alto del panel;
+		Fin Si
+Fin de Clase Panel
+ 
+Clase Ventana hereda JFrame
+    	Constructor Ventana (nombre: Cadena, fondo: Color, icono: ImageIcon, tamano: Dimension, espacio: Entero)
+        		Establecer el título de la ventana como 'nombre';
+        		Establecer el color de fondo del contenido de la ventana como 'fondo';
+	        	Establecer el ícono de la ventana como la imagen del 'icono';
+        		Establecer el tamaño mínimo de la ventana como 'tamano';
+        		Desactivar la capacidad de redimensionar la ventana;
+        		Establecer la operación de cierre de la ventana para que la aplicación se cierre al cerrar la ventana;
+        		Configurar el diseño de la ventana como BorderLayout con un espacio horizontal y vertical de 'espacio';
+	Fin Constructor
+Fin de Clase Ventana
+ 
+Clase Ventana2 Extiende JFrame
+    	Constructor Ventana2 (jugar: Boton, salir: Boton, manual: Boton)
+        		Establecer el título de la ventana como "Memoria";
+        		Establecer el color de fondo del contenido de la ventana como el color con el valor hexadecimal 0x6E3700;
+        		Establecer el ícono de la ventana como la imagen "imgsMc\mesa.png";
+        		Establecer el tamaño mínimo de la ventana como 1000x600;
+        		Desactivar la capacidad de redimensionar la ventana;
+        		Establecer la operación de cierre de la ventana para que la aplicación se cierre al cerrar la ventana;
+        		Configurar el diseño de la ventana como BorderLayout con un espacio horizontal y vertical de 20;
+        		Crear un nuevo panel llamado 'panelCentro' con una imagen de fondo "imgsMc\inicio.png", un tamaño de 1000x600 y un fondo del color 0x6E3700;
+        		Establecer las ubicaciones de los botones 'jugar', 'salir', y 'manual' en coordenadas específicas dentro del panel 'panelCentro';
+        		Agregar los botones 'jugar', 'salir' y 'manual' al 'panelCentro';
+        		Agregar 'panelCentro a la ventana;
+	Fin Constructor
+Fin de Clase Ventana2
+ 
+Clase Ventana3 hereda JFrame
+    	Constructor Ventana3 (jugar: Boton
+        		Establecer el título de la ventana como "Memoria";
+        		Establecer el color de fondo del contenido de la ventana como el color con el valor hexadecimal 0x6E3700;
+        		Establecer el ícono de la ventana como la imagen "imgsMc\mesa.png";
+        		Establecer el tamaño mínimo de la ventana como 1000x600;
+        		Desactivar la capacidad de redimensionar la ventana;
+        		Establecer la operación de cierre de la ventana para que la aplicación se cierre al cerrar la ventana;
+        		Configurar el diseño de la ventana como BorderLayout con un espacio horizontal y vertical de 20;
+        		Crear un nuevo panel llamado panelCentro con una imagen de fondo "imgsMc\manual.gif", un tamaño de 1000x600 y un fondo del color 0x6E3700:
+        		Establecer la ubicación del botón 'jugar' en coordenadas específicas dentro del panel panelCentro;
+        		Agregar el botón 'jugar' al panelCentro;
+        		Agregar panelCentro a la ventana;
+	Fin Constructor
+Fin de Clase Ventana3
+ 
+Clase Ventana4 hereda JFrame
+    	Constructor Ventana4 (salir: Boton, texto: Cadena, texto1: Cadena, texto2: Cadena
+        		Establecer el título de la ventana como "Memoria";
+        		Establecer el color de fondo del contenido de la ventana como el color con el valor hexadecimal 0x6E3700;
+        		Establecer el ícono de la ventana como la imagen "imgsMc\mesa.png";
+        		Establecer el tamaño mínimo de la ventana como 1000x600;
+        		Desactivar la capacidad de redimensionar la ventana;
+        		Establecer la operación de cierre de la ventana para que la aplicación se cierre al cerrar la ventana;
+        		Configurar el diseño de la ventana como BorderLayout con un espacio horizontal y vertical de 20;
+        		Crear un nuevo panel llamado 'panelCentro' con una imagen de fondo "imgsMc\final.png", un tamaño de 1000x600 y un fondo del color 0x6E3700;
+        		Crear etiquetas 'ganador', 'ganador1' y 'ganador2' con los textos proporcionados, colores de fuente y fondos específicos;
+        		Establecer fuentes personalizadas y ubicaciones para las etiquetas;
+        		Establecer la ubicación del botón 'salir' en coordenadas específicas dentro del panel panelCentro;
+        		Agregar las etiquetas 'ganador', 'ganador1' y 'ganador2' al 'panelCentro';
+        		Agregar el botón 'salir' al 'panelCentro';
+        		Agregar 'panelCentro' a la ventana;
+	Fin Constructor
+Fin de Clase Ventana4;
+ 
+Clase Memoria
+    	jugador1 = CrearJugador ("Steve");
+    	jugador2 = CrearJugador ("Alex");
+    	colaJugadores = CrearCola();
+    	
+	DefinirPrimerJugador (colaJugadores, jugador1, jugador2);   
+    	pilaCartas = CrearPila();
+    	LlenarPilaCartas (pilaCartas);
+    	espacioVacio = CargarImagen ("iconos\\cartaVacia.png");
+    	botonesTablero = BotonesCarta[24];
+    	LabelsParejasJ1 = LabelsCarta[11];
+    	LabelsParejasJ2 = LabelsCarta[11]
+    	AsignarCartasAlTablero (pilaCartas, botonesTablero);
+    	ventanaJuego = CrearVentanaJuego (botonesTablero, LabelsParejasJ1, LabelsParejasJ2);
+    	Repetir
+        		turno = ObtenerTurnoActual (colaJugadores);
+        		ActualizarInterfazGrafica (turno, PuntajeJugadores, botonesTablero);
+        		tableroVacio = EsTableroVacio (botonesTablero);
+        		Si InteracciónDeJugador()
+            			Si SeEncontróPareja (botón1, botón2)
+                				ProcesarPareja (botón1, botón2);
+            			Sino;
+                				ProcesarNoPareja (botón1, botón2);
+                				CambiarTurno (colaJugadores);
+            			Fin si
+        		Fin si
+    	Hasta que (tableroVacio=true) O (jugador1.puntos > 12.5) O (jugador1.puntos > 12.5);
+    	MostrarGanador (colaJugadores);
+    	CerrarVentana (ventanaJuego);
+Fin Clase Memoria
